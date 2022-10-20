@@ -259,9 +259,6 @@ def volden_plummer_fit(radius, profile, bounds, init):
       profile index array
   rflat : list
       the radius within which the N(r) profile is flat
-
-  If err = True, then nc_err, p_err and rflat_err also gets returned
-
   """
 
   N0 = []; p = []; rflat = []; covm = []
