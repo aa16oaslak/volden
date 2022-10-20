@@ -229,7 +229,7 @@ def plummer_model(x, N0, p, rflat):
 
   return N0/((1.+(x/rflat)**2.)**((p-1.)/2.)) 
 
-def volden_plummer_fit(radius, profile, bounds, init, error = False):
+def volden_plummer_fit(radius, profile, bounds, init):
   """
   ----
   Calculating the plummer model parameters.
@@ -250,8 +250,6 @@ def volden_plummer_fit(radius, profile, bounds, init, error = False):
       init = None, then default values will be considered for model 
       fit (default values: [1e+21, 1.5, 0.01]). User can also enter their
       choice of initial values
-  err : bool, optional
-      If true then the error in the model parameters will also get returned
 
   Returns:
 
@@ -267,7 +265,7 @@ def volden_plummer_fit(radius, profile, bounds, init, error = False):
   """
 
   N0 = []; p = []; rflat = []; covm = []
-  N0_err = []; p_err=[]; rflat_err= []
+  #N0_err = []; p_err=[]; rflat_err= []
 
   #plummer-fit for the extracted profiles
   for i in range(0, len(profile)):
@@ -279,15 +277,18 @@ def volden_plummer_fit(radius, profile, bounds, init, error = False):
     N0.append(fittedParameters[0])
     p.append(fittedParameters[1])
     rflat.append(fittedParameters[2])
-    covm.append(np.array(pcov))
-
+    #covm.append(np.array(pcov))
+  
+  #Since the below code represents fitting error, we cannot consider this for further analysis
+  '''
   #Error in each free parameter by considering the covariance matrix
   for i in range(0,len(covm)):
       err = np.sqrt(np.diag(covm[i]))
       N0_err.append(err[0])
       p_err.append(err[1])
       rflat_err.append(err[2])
-
+  '''
+  
   rflat, p = np.absolute(rflat), np.absolute(p)
   
   # Ap - finite constant factor for p > 1 that takes account the relative 
@@ -296,7 +297,7 @@ def volden_plummer_fit(radius, profile, bounds, init, error = False):
 
   # Calculating nc
   nc = []
-  nc_err = []
+  #nc_err = []
 
   '''
   for i in(range(len(rflat))):
@@ -310,16 +311,20 @@ def volden_plummer_fit(radius, profile, bounds, init, error = False):
   '''
 
   nc = np.array(N0)/(Ap*np.array(rflat)*3.08567758128e+18)
-  nc_err.append(np.std(nc))
+  #nc_err.append(np.std(nc))
 
-  nc, nc_err, p_err, rflat_err = np.array(nc), np.array(nc_err), np.array(p_err), np.array(rflat_err)
+  #nc, nc_err, p_err, rflat_err = np.array(nc), np.array(nc_err), np.array(p_err), np.array(rflat_err)
 
   # Return the O/P based on the "err" input
+  '''
   if error == True:
     return nc, p, rflat, nc_err, p_err, rflat_err
 
   else:
     return nc, p, rflat
+  '''
+  
+  return nc, p, rflat
 
 # In[ ]:
 
